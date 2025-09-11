@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>quiz.phasenetwork.xyz</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* Custom Styles for the Hacker Vibe */
+        :root {
+            --background-dark: #0a0a0a;
+            --primary-glow: #00ff00;
+            --secondary-glow: #00ffff;
+            --text-primary: #e0e0e0;
+            --text-secondary: #a0a0a0;
+            --border-color: rgba(0, 255, 0, 0.2);
+            --card-bg: rgba(20, 20, 20, 0.8);
+        }
+
+        body {
+            font-family: 'Fira Code', monospace;
+            background-color: var(--background-dark);
+            color: var(--text-primary);
+            background-image:
+                radial-gradient(rgba(0, 255, 0, 0.1) 1px, transparent 0),
+                radial-gradient(rgba(0, 255, 0, 0.05) 1px, transparent 0);
+            background-size: 40px 40px;
+            background-position: 0 0, 20px 20px;
+        }
+
+        .hacker-glow-text {
+            text-shadow: 0 0 5px var(--primary-glow), 0 0 10px var(--primary-glow);
+        }
+
+        .hacker-glow-text-secondary {
+            text-shadow: 0 0 5px var(--secondary-glow), 0 0 10px var(--secondary-glow);
+        }
+
+        .hacker-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.1);
+        }
+
+        .hacker-card:hover {
+            border-color: var(--primary-glow);
+            box-shadow: 0 0 25px rgba(0, 255, 0, 0.3);
+            transform: translateY(-5px);
+        }
+
+        .hacker-btn {
+            background-color: transparent;
+            border: 1px solid var(--primary-glow);
+            color: var(--primary-glow);
+            text-shadow: 0 0 5px var(--primary-glow);
+            transition: all 0.3s ease;
+        }
+
+        .hacker-btn:hover {
+            background-color: rgba(0, 255, 0, 0.1);
+            box-shadow: 0 0 15px var(--primary-glow);
+        }
+        
+        .hacker-btn-secondary {
+            border-color: var(--secondary-glow);
+            color: var(--secondary-glow);
+            text-shadow: 0 0 5px var(--secondary-glow);
+        }
+
+        .hacker-btn-secondary:hover {
+            background-color: rgba(0, 255, 255, 0.1);
+            box-shadow: 0 0 15px var(--secondary-glow);
+        }
+
+        .hacker-input {
+            background-color: rgba(0, 255, 0, 0.05);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+        }
+
+        .hacker-input:focus {
+            outline: none;
+            border-color: var(--primary-glow);
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+        }
+        
+        .glitch {
+            animation: glitch 1.5s linear infinite;
+        }
+
+        @keyframes glitch {
+            2%, 64% { transform: translate(2px, 0) skew(0deg); }
+            4%, 60% { transform: translate(-2px, 0) skew(0deg); }
+            62% { transform: translate(0, 0) skew(5deg); }
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--background-dark);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-glow);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #00cc00;
+        }
+    </style>
+</head>
+<body class="h-full flex items-center justify-center p-4">
+
+    <!-- Loading Spinner -->
+    <div id="loading-spinner" class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50">
+        <div class="w-16 h-16 border-4 border-dashed rounded-full animate-spin border-green-500"></div>
+    </div>
+
+    <!-- Main Container -->
+    <div id="app-container" class="w-full max-w-5xl mx-auto">
+
+        <!-- Header (Visible when logged in) -->
+        <header id="app-header" class="hidden justify-between items-center mb-8 p-4 border border-green-500/20 rounded-lg bg-black/50">
+            <div>
+                <h1 class="text-2xl hacker-glow-text">Phase<span class="glitch">Net</span>work</h1>
+                <p id="welcome-message" class="text-sm text-gray-400">Welcome, operator...</p>
+            </div>
+            <nav class="flex items-center space-x-4">
+                 <button id="leaderboard-nav-btn" class="hacker-btn text-sm px-3 py-1 rounded-md">Leaderboard</button>
+                 <button id="quizzes-nav-btn" class="hacker-btn-secondary text-sm px-3 py-1 rounded-md">Quizzes</button>
+                 <button id="logout-btn" class="text-red-500 hover:text-red-400 text-sm">Logout</button>
+            </nav>
+        </header>
+
+        <!-- Auth View -->
+        <div id="auth-view" class="">
+            <div class="hacker-card p-8 rounded-lg max-w-md mx-auto">
+                <h2 class="text-3xl font-bold text-center mb-2 hacker-glow-text">Access Terminal</h2>
+                <p class="text-center text-gray-400 mb-6">Authentication required.</p>
+                <form id="login-form">
+                    <input id="login-email" type="email" placeholder="email_address" class="w-full p-2 mb-4 hacker-input rounded-md" required>
+                    <input id="login-password" type="password" placeholder="password" class="w-full p-2 mb-4 hacker-input rounded-md" required>
+                    <button type="submit" class="w-full p-2 hacker-btn rounded-md mb-2">Login</button>
+                </form>
+                <p id="auth-error" class="text-red-500 text-center text-sm mb-4 h-5"></p>
+                <p class="text-center text-gray-400 text-sm">
+                    First time? <a href="#" id="show-signup" class="text-cyan-400 hover:underline">Create an account</a>.
+                </p>
+            </div>
+             <div id="signup-form-container" class="hacker-card p-8 rounded-lg max-w-md mx-auto hidden mt-4">
+                <h2 class="text-3xl font-bold text-center mb-2 hacker-glow-text-secondary">Register Identity</h2>
+                <form id="signup-form">
+                    <input id="signup-username" type="text" placeholder="username" class="w-full p-2 mb-4 hacker-input rounded-md" required>
+                    <input id="signup-email" type="email" placeholder="email_address" class="w-full p-2 mb-4 hacker-input rounded-md" required>
+                    <input id="signup-password" type="password" placeholder="password" class="w-full p-2 mb-4 hacker-input rounded-md" required>
+                    <button type="submit" class="w-full p-2 hacker-btn-secondary rounded-md">Sign Up</button>
+                </form>
+             </div>
+        </div>
+
+        <!-- Vulnerability Selection View -->
+        <div id="vulnerability-view" class="hidden">
+             <h2 class="text-3xl text-center hacker-glow-text mb-8">Select Vulnerability Module</h2>
+            <div id="vulnerability-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Cards will be injected by JS -->
+            </div>
+        </div>
+
+        <!-- Quiz View -->
+        <div id="quiz-view" class="hidden">
+            <div class="hacker-card p-8 rounded-lg">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 id="quiz-title" class="text-2xl hacker-glow-text-secondary"></h2>
+                    <p id="quiz-progress" class="text-lg font-mono"></p>
+                </div>
+                <div id="question-container" class="mb-6">
+                    <p id="question-text" class="text-xl mb-6 min-h-[6rem]"></p>
+                    <div id="options-container" class="space-y-3">
+                        <!-- Options will be injected by JS -->
+                    </div>
+                </div>
+                <p id="feedback-text" class="text-center h-6 mb-4 font-bold"></p>
+                <button id="next-question-btn" class="w-full p-2 hacker-btn rounded-md hidden">Next Question</button>
+            </div>
+        </div>
+        
+        <!-- Results View -->
+        <div id="results-view" class="hidden">
+             <div class="hacker-card p-8 rounded-lg text-center">
+                 <h2 class="text-3xl hacker-glow-text mb-4">Assessment Complete</h2>
+                 <p class="text-xl mb-2">Vulnerability Module: <span id="results-quiz-name" class="font-bold text-cyan-400"></span></p>
+                 <p class="text-5xl font-bold my-8"><span id="results-score" class="hacker-glow-text"></span> / <span id="results-total"></span></p>
+                 <div class="flex justify-center space-x-4">
+                    <button id="post-score-btn" class="p-3 hacker-btn rounded-md">Post Score to Leaderboard</button>
+                    <button id="restart-quiz-btn" class="p-3 hacker-btn-secondary rounded-md">Retry Module</button>
+                 </div>
+             </div>
+        </div>
+
+        <!-- Leaderboard View -->
+        <div id="leaderboard-view" class="hidden">
+             <h2 class="text-3xl text-center hacker-glow-text mb-8">Global Leaderboard</h2>
+             <div class="hacker-card p-4 sm:p-8 rounded-lg">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left">
+                        <thead class="border-b border-green-500/30">
+                            <tr>
+                                <th class="p-3 text-sm font-semibold tracking-wider text-green-400">RANK</th>
+                                <th class="p-3 text-sm font-semibold tracking-wider text-green-400">OPERATOR</th>
+                                <th class="p-3 text-sm font-semibold tracking-wider text-green-400">VULNERABILITY</th>
+                                <th class="p-3 text-sm font-semibold tracking-wider text-green-400">SCORE</th>
+                                <th class="p-3 text-sm font-semibold tracking-wider text-green-400">DATE</th>
+                            </tr>
+                        </thead>
+                        <tbody id="leaderboard-body">
+                           <!-- Scores will be injected here -->
+                        </tbody>
+                    </table>
+                </div>
+             </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        // IMPORTANT: The Firebase JS SDK version has been updated to match your provided snippet.
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { 
+            getAuth, 
+            createUserWithEmailAndPassword, 
+            signInWithEmailAndPassword, 
+            onAuthStateChanged,
+            signOut,
+            updateProfile
+        } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { 
+            getFirestore, 
+            collection, 
+            addDoc,
+            query,
+            orderBy,
+            onSnapshot,
+            limit
+        } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+        // --- Firebase Config ---
+        // !!! SECURITY WARNING !!!
+        // The configuration below contains sensitive keys. You have shared this publicly.
+        // It is STRONGLY RECOMMENDED that you go to your Firebase project settings,
+        // REGENERATE the API key, and apply website restrictions to your new key.
+        // Replace this object with your NEW, SECURE configuration.
+        const firebaseConfig = {
+            apiKey: "AIzaSyCS6z0i36Qw-zcKyI53d4zIqeaPsVDKrgI",
+            authDomain: "quiz-59618.firebaseapp.com",
+            projectId: "quiz-59618",
+            storageBucket: "quiz-59618.appspot.com",
+            messagingSenderId: "444738676073",
+            appId: "1:444738676073:web:5b4d6667d59341c68749f8",
+            measurementId: "G-5BEMN0WVSH"
+        };
+
+        // --- App Initialization ---
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // --- UI Elements ---
+        const loadingSpinner = document.getElementById('loading-spinner');
+        const appHeader = document.getElementById('app-header');
+        const welcomeMessage = document.getElementById('welcome-message');
+        const views = {
+            auth: document.getElementById('auth-view'),
+            vulnerability: document.getElementById('vulnerability-view'),
+            quiz: document.getElementById('quiz-view'),
+            results: document.getElementById('results-view'),
+            leaderboard: document.getElementById('leaderboard-view'),
+        };
+        const authError = document.getElementById('auth-error');
+
+        // --- App State ---
+        let currentUser = null;
+        let currentQuizData = null;
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let leaderboardUnsubscribe = null;
+
+        // --- Quiz Data ---
+        const quizzes = {
+            "price-tampering": {
+                title: "Price Tampering",
+                questions: [
+                    { question: "What is the primary goal of a Price Tampering attack?", options: ["Steal user credentials", "Modify item prices for personal gain", "Crash the website", "Deface the homepage"], answer: "Modify item prices for personal gain" },
+                    { question: "Where is the most effective place to prevent price tampering?", options: ["Client-side JavaScript", "CSS styling", "Server-side validation", "HTML hidden fields"], answer: "Server-side validation" },
+                    { question: "Modifying a price in a hidden form field before submission is an example of...?", options: ["SQL Injection", "Cross-Site Scripting (XSS)", "Parameter Tampering", "Denial of Service (DoS)"], answer: "Parameter Tampering" },
+                    { question: "Why should a server never trust the final total price sent from a client's browser?", options: ["It might be inaccurate", "It can be easily manipulated", "It slows down the server", "It's a modern standard"], answer: "It can be easily manipulated" },
+                    { question: "Which tool is commonly used to intercept and modify HTTP requests for price tampering?", options: ["Photoshop", "Notepad", "Burp Suite", "A compiler"], answer: "Burp Suite" }
+                ]
+            },
+            "sql-injection": {
+                title: "SQL Injection",
+                questions: [
+                    { question: "What does SQL stand for?", options: ["Structured Query Language", "Strong Question Language", "Simple Query Logic", "System Query Language"], answer: "Structured Query Language" },
+                    { question: "What is the purpose of the SQL comment '--' in an attack?", options: ["To add helpful notes", "To crash the database", "To ignore the rest of the query", "To select all data"], answer: "To ignore the rest of the query" },
+                    { question: "Which technique is a primary defense against SQL Injection?", options: ["Using firewalls", "Encrypting the database", "Parameterized queries (prepared statements)", "Hiding the database server"], answer: "Parameterized queries (prepared statements)" },
+                    { question: "The statement '1'='1' is often used in SQLi attacks because it always evaluates to...?", options: ["FALSE", "NULL", "TRUE", "An error"], answer: "TRUE" },
+                    { question: "What type of SQL Injection uses database error messages to extract information?", options: ["In-band SQLi", "Blind SQLi", "Error-based SQLi", "Out-of-band SQLi"], answer: "Error-based SQLi" }
+                ]
+            },
+            "xss": {
+                title: "Cross-Site Scripting (XSS)",
+                questions: [
+                     { question: "What is the main goal of a Cross-Site Scripting (XSS) attack?", options: ["To inject malicious scripts into a trusted website", "To delete the website's database", "To overload the server", "To modify CSS styles"], answer: "To inject malicious scripts into a trusted website" },
+                    { question: "Which type of XSS is executed on the user's browser without the malicious script ever going to the server?", options: ["Stored XSS", "Reflected XSS", "DOM-based XSS", "Server-Side XSS"], answer: "DOM-based XSS" },
+                    { question: "What is a common way to prevent XSS vulnerabilities?", options: ["Validating user input for length", "Sanitizing and encoding user output", "Using complex passwords", "Blocking certain IP addresses"], answer: "Sanitizing and encoding user output" },
+                    { question: "Which HTML tag is commonly used to demonstrate a basic XSS vulnerability?", options: ["<div>", "<img>", "<p>", "<script>"], answer: "<script>" },
+                    { question: "In a 'Stored XSS' attack, where is the malicious script saved?", options: ["In the attacker's computer", "In the victim's browser cache", "In the website's database", "In a temporary file"], answer: "In the website's database" }
+                ]
+            }
+        };
+
+        // --- View Management ---
+        const showView = (viewId) => {
+            Object.values(views).forEach(view => view.classList.add('hidden'));
+            if(views[viewId]) {
+                views[viewId].classList.remove('hidden');
+            }
+        };
+
+        // --- Authentication Logic ---
+        onAuthStateChanged(auth, (user) => {
+            loadingSpinner.style.display = 'none';
+            if (user) {
+                currentUser = user;
+                welcomeMessage.textContent = `Welcome, ${user.displayName || user.email}`;
+                appHeader.classList.remove('hidden');
+                appHeader.classList.add('flex');
+                showView('vulnerability');
+            } else {
+                currentUser = null;
+                appHeader.classList.add('hidden');
+                appHeader.classList.remove('flex');
+                showView('auth');
+                if (leaderboardUnsubscribe) leaderboardUnsubscribe();
+            }
+        });
+
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            authError.textContent = '';
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+            } catch (error) {
+                authError.textContent = error.message;
+            }
+        });
+
+        document.getElementById('signup-form').addEventListener('submit', async (e) => {
+             e.preventDefault();
+            const email = document.getElementById('signup-email').value;
+            const password = document.getElementById('signup-password').value;
+            const username = document.getElementById('signup-username').value;
+            authError.textContent = '';
+             try {
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                await updateProfile(userCredential.user, { displayName: username });
+                currentUser = auth.currentUser;
+                welcomeMessage.textContent = `Welcome, ${currentUser.displayName}`;
+                showView('vulnerability');
+            } catch (error) {
+                authError.textContent = error.message;
+            }
+        });
+
+        document.getElementById('logout-btn').addEventListener('click', () => {
+            signOut(auth);
+        });
+        
+        document.getElementById('show-signup').addEventListener('click', (e) => {
+            e.preventDefault();
+            document.getElementById('signup-form-container').classList.toggle('hidden');
+        });
+
+        // --- Navigation ---
+        document.getElementById('leaderboard-nav-btn').addEventListener('click', () => {
+            loadLeaderboard();
+            showView('leaderboard');
+        });
+        document.getElementById('quizzes-nav-btn').addEventListener('click', () => {
+            if (leaderboardUnsubscribe) leaderboardUnsubscribe();
+            showView('vulnerability');
+        });
+
+        // --- Vulnerability Selection Logic ---
+        const vulnerabilityGrid = document.getElementById('vulnerability-grid');
+        Object.keys(quizzes).forEach(key => {
+            const quiz = quizzes[key];
+            const card = document.createElement('div');
+            card.className = 'hacker-card p-6 rounded-lg cursor-pointer';
+            card.innerHTML = `<h3 class="text-xl font-bold hacker-glow-text">${quiz.title}</h3><p class="text-sm text-gray-400 mt-2">${quiz.questions.length} questions</p>`;
+            card.addEventListener('click', () => startQuiz(key));
+            vulnerabilityGrid.appendChild(card);
+        });
+
+        // --- Quiz Logic ---
+        const startQuiz = (quizId) => {
+            currentQuizData = quizzes[quizId];
+            currentQuestionIndex = 0;
+            score = 0;
+            document.getElementById('quiz-title').textContent = currentQuizData.title;
+            showQuestion();
+            showView('quiz');
+        };
+
+        const showQuestion = () => {
+            const question = currentQuizData.questions[currentQuestionIndex];
+            document.getElementById('question-text').textContent = question.question;
+            document.getElementById('quiz-progress').textContent = `${currentQuestionIndex + 1} / ${currentQuizData.questions.length}`;
+            
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = '';
+            
+            question.options.forEach(optionText => {
+                const button = document.createElement('button');
+                button.textContent = optionText;
+                button.className = 'w-full p-3 hacker-btn text-left rounded-md';
+                button.onclick = () => selectAnswer(button, optionText, question.answer);
+                optionsContainer.appendChild(button);
+            });
+
+            document.getElementById('feedback-text').textContent = '';
+            document.getElementById('next-question-btn').classList.add('hidden');
+        };
+        
+        const selectAnswer = (button, selectedOption, correctAnswer) => {
+            const optionsContainer = document.getElementById('options-container');
+            Array.from(optionsContainer.children).forEach(btn => {
+                btn.disabled = true;
+                if (btn.textContent === correctAnswer) {
+                     btn.className = 'w-full p-3 text-left rounded-md bg-green-500/30 border-green-500 text-white';
+                }
+            });
+
+            const feedback = document.getElementById('feedback-text');
+            if (selectedOption === correctAnswer) {
+                score++;
+                feedback.textContent = 'Correct!';
+                feedback.className = 'text-center h-6 mb-4 font-bold text-green-400';
+            } else {
+                button.className = 'w-full p-3 text-left rounded-md bg-red-500/30 border-red-500 text-white';
+                feedback.textContent = 'Incorrect!';
+                feedback.className = 'text-center h-6 mb-4 font-bold text-red-400';
+            }
+             document.getElementById('next-question-btn').classList.remove('hidden');
+        };
+
+        document.getElementById('next-question-btn').addEventListener('click', () => {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < currentQuizData.questions.length) {
+                showQuestion();
+            } else {
+                showResults();
+            }
+        });
+        
+        // --- Results Logic ---
+        const showResults = () => {
+            document.getElementById('results-quiz-name').textContent = currentQuizData.title;
+            document.getElementById('results-score').textContent = score;
+            document.getElementById('results-total').textContent = currentQuizData.questions.length;
+            document.getElementById('post-score-btn').disabled = false;
+            document.getElementById('post-score-btn').textContent = "Post Score to Leaderboard";
+            showView('results');
+        };
+
+        document.getElementById('restart-quiz-btn').addEventListener('click', () => {
+            startQuiz(Object.keys(quizzes).find(key => quizzes[key].title === currentQuizData.title));
+        });
+
+        document.getElementById('post-score-btn').addEventListener('click', async () => {
+            if (!currentUser) return;
+            const postBtn = document.getElementById('post-score-btn');
+            postBtn.disabled = true;
+            postBtn.textContent = "Posting...";
+
+            try {
+                await addDoc(collection(db, "leaderboard"), {
+                    userId: currentUser.uid,
+                    userName: currentUser.displayName || 'Anonymous',
+                    vulnerability: currentQuizData.title,
+                    score: score,
+                    total: currentQuizData.questions.length,
+                    timestamp: new Date()
+                });
+                postBtn.textContent = "Posted!";
+                loadLeaderboard();
+                setTimeout(() => showView('leaderboard'), 1000);
+            } catch (error) {
+                console.error("Error posting score: ", error);
+                postBtn.textContent = "Error! Retry?";
+                postBtn.disabled = false;
+            }
+        });
+
+        // --- Leaderboard Logic ---
+        const loadLeaderboard = () => {
+            const leaderboardBody = document.getElementById('leaderboard-body');
+            const q = query(collection(db, "leaderboard"), orderBy("score", "desc"), orderBy("timestamp", "desc"), limit(25));
+            
+            leaderboardUnsubscribe = onSnapshot(q, (querySnapshot) => {
+                leaderboardBody.innerHTML = '';
+                let rank = 1;
+                querySnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    const date = data.timestamp.toDate().toLocaleDateString();
+                    const row = `
+                        <tr class="border-b border-gray-500/20 hover:bg-green-500/10">
+                            <td class="p-3 font-bold text-lg">${rank++}</td>
+                            <td class="p-3">${data.userName}</td>
+                            <td class="p-3">${data.vulnerability}</td>
+                            <td class="p-3 font-mono text-cyan-400">${data.score} / ${data.total}</td>
+                            <td class="p-3 text-sm text-gray-400">${date}</td>
+                        </tr>
+                    `;
+                    leaderboardBody.innerHTML += row;
+                });
+            });
+        };
+
+    </script>
+
+</body>
+</html>
+
