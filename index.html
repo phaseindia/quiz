@@ -1,542 +1,424 @@
 <!DOCTYPE html>
-<html lang="en" class="h-full">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>quiz.phasenetwork.xyz</title>
+    <title>Phasenetwork Quiz</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;700&display=swap" rel="stylesheet">
     <style>
-        /* Custom Styles for the Hacker Vibe */
-        :root {
-            --background-dark: #0a0a0a;
-            --primary-glow: #00ff00;
-            --secondary-glow: #00ffff;
-            --text-primary: #e0e0e0;
-            --text-secondary: #a0a0a0;
-            --border-color: rgba(0, 255, 0, 0.2);
-            --card-bg: rgba(20, 20, 20, 0.8);
-        }
-
         body {
             font-family: 'Fira Code', monospace;
-            background-color: var(--background-dark);
-            color: var(--text-primary);
-            background-image:
-                radial-gradient(rgba(0, 255, 0, 0.1) 1px, transparent 0),
-                radial-gradient(rgba(0, 255, 0, 0.05) 1px, transparent 0);
-            background-size: 40px 40px;
-            background-position: 0 0, 20px 20px;
+            background-color: #0d1117;
+            color: #c9d1d9;
+            --glow-color: #00aaff;
         }
-
-        .hacker-glow-text {
-            text-shadow: 0 0 5px var(--primary-glow), 0 0 10px var(--primary-glow);
+        .container-glow {
+            box-shadow: 0 0 5px var(--glow-color), 0 0 10px var(--glow-color), 0 0 15px var(--glow-color);
+            border: 1px solid var(--glow-color);
         }
-
-        .hacker-glow-text-secondary {
-            text-shadow: 0 0 5px var(--secondary-glow), 0 0 10px var(--secondary-glow);
-        }
-
-        .hacker-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            transition: all 0.3s ease;
-            box-shadow: 0 0 15px rgba(0, 255, 0, 0.1);
-        }
-
-        .hacker-card:hover {
-            border-color: var(--primary-glow);
-            box-shadow: 0 0 25px rgba(0, 255, 0, 0.3);
-            transform: translateY(-5px);
-        }
-
-        .hacker-btn {
+        .btn-glow {
             background-color: transparent;
-            border: 1px solid var(--primary-glow);
-            color: var(--primary-glow);
-            text-shadow: 0 0 5px var(--primary-glow);
+            border: 1px solid var(--glow-color);
+            color: var(--glow-color);
+            text-shadow: 0 0 5px var(--glow-color);
             transition: all 0.3s ease;
         }
-
-        .hacker-btn:hover {
-            background-color: rgba(0, 255, 0, 0.1);
-            box-shadow: 0 0 15px var(--primary-glow);
+        .btn-glow:hover {
+            background-color: var(--glow-color);
+            color: #0d1117;
+            box-shadow: 0 0 10px var(--glow-color), 0 0 20px var(--glow-color);
         }
-        
-        .hacker-btn-secondary {
-            border-color: var(--secondary-glow);
-            color: var(--secondary-glow);
-            text-shadow: 0 0 5px var(--secondary-glow);
+        .input-glow {
+            background-color: #161b22;
+            border: 1px solid #30363d;
+            color: #c9d1d9;
+            transition: all 0.3s ease;
         }
-
-        .hacker-btn-secondary:hover {
-            background-color: rgba(0, 255, 255, 0.1);
-            box-shadow: 0 0 15px var(--secondary-glow);
-        }
-
-        .hacker-input {
-            background-color: rgba(0, 255, 0, 0.05);
-            border: 1px solid var(--border-color);
-            color: var(--text-primary);
-        }
-
-        .hacker-input:focus {
+        .input-glow:focus {
             outline: none;
-            border-color: var(--primary-glow);
-            box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+            border-color: var(--glow-color);
+            box-shadow: 0 0 5px var(--glow-color);
         }
-        
-        .glitch {
-            animation: glitch 1.5s linear infinite;
+        .text-glow {
+            text-shadow: 0 0 8px var(--glow-color);
         }
-
-        @keyframes glitch {
-            2%, 64% { transform: translate(2px, 0) skew(0deg); }
-            4%, 60% { transform: translate(-2px, 0) skew(0deg); }
-            62% { transform: translate(0, 0) skew(5deg); }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #161b22; }
+        ::-webkit-scrollbar-thumb { background: var(--glow-color); border-radius: 4px; }
+        .blinking-cursor {
+            animation: blink 1s step-end infinite;
         }
-
-        /* Scrollbar styling */
-        ::-webkit-scrollbar {
-            width: 8px;
+        @keyframes blink {
+            from, to { border-color: transparent }
+            50% { border-color: var(--glow-color); }
         }
-        ::-webkit-scrollbar-track {
-            background: var(--background-dark);
-        }
-        ::-webkit-scrollbar-thumb {
-            background: var(--primary-glow);
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #00cc00;
+        .hidden {
+            display: none;
         }
     </style>
 </head>
-<body class="h-full flex items-center justify-center p-4">
+<body class="min-h-screen flex items-center justify-center p-4">
 
-    <!-- Loading Spinner -->
-    <div id="loading-spinner" class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50">
-        <div class="w-16 h-16 border-4 border-dashed rounded-full animate-spin border-green-500"></div>
-    </div>
+    <div id="app-container" class="w-full max-w-4xl mx-auto">
 
-    <!-- Main Container -->
-    <div id="app-container" class="w-full max-w-5xl mx-auto">
-
-        <!-- Header (Visible when logged in) -->
-        <header id="app-header" class="hidden justify-between items-center mb-8 p-4 border border-green-500/20 rounded-lg bg-black/50">
-            <div>
-                <h1 class="text-2xl hacker-glow-text">Phase<span class="glitch">Net</span>work</h1>
-                <p id="welcome-message" class="text-sm text-gray-400">Welcome, operator...</p>
-            </div>
-            <nav class="flex items-center space-x-4">
-                 <button id="leaderboard-nav-btn" class="hacker-btn text-sm px-3 py-1 rounded-md">Leaderboard</button>
-                 <button id="quizzes-nav-btn" class="hacker-btn-secondary text-sm px-3 py-1 rounded-md">Quizzes</button>
-                 <button id="logout-btn" class="text-red-500 hover:text-red-400 text-sm">Logout</button>
-            </nav>
-        </header>
-
-        <!-- Auth View -->
-        <div id="auth-view" class="">
-            <div class="hacker-card p-8 rounded-lg max-w-md mx-auto">
-                <h2 class="text-3xl font-bold text-center mb-2 hacker-glow-text">Access Terminal</h2>
-                <p class="text-center text-gray-400 mb-6">Authentication required.</p>
-                <form id="login-form">
-                    <input id="login-email" type="email" placeholder="email_address" class="w-full p-2 mb-4 hacker-input rounded-md" required>
-                    <input id="login-password" type="password" placeholder="password" class="w-full p-2 mb-4 hacker-input rounded-md" required>
-                    <button type="submit" class="w-full p-2 hacker-btn rounded-md mb-2">Login</button>
-                </form>
-                <p id="auth-error" class="text-red-500 text-center text-sm mb-4 h-5"></p>
-                <p class="text-center text-gray-400 text-sm">
-                    First time? <a href="#" id="show-signup" class="text-cyan-400 hover:underline">Create an account</a>.
-                </p>
-            </div>
-             <div id="signup-form-container" class="hacker-card p-8 rounded-lg max-w-md mx-auto hidden mt-4">
-                <h2 class="text-3xl font-bold text-center mb-2 hacker-glow-text-secondary">Register Identity</h2>
-                <form id="signup-form">
-                    <input id="signup-username" type="text" placeholder="username" class="w-full p-2 mb-4 hacker-input rounded-md" required>
-                    <input id="signup-email" type="email" placeholder="email_address" class="w-full p-2 mb-4 hacker-input rounded-md" required>
-                    <input id="signup-password" type="password" placeholder="password" class="w-full p-2 mb-4 hacker-input rounded-md" required>
-                    <button type="submit" class="w-full p-2 hacker-btn-secondary rounded-md">Sign Up</button>
-                </form>
-             </div>
+        <!-- Config Error View -->
+        <div id="config-error-view" class="hidden container-glow p-8 rounded-lg text-center">
+            <h1 class="text-3xl font-bold text-red-500 mb-4 text-glow">Configuration Needed</h1>
+            <p class="text-lg">Please open the <code>index.html</code> file and replace <code>'YOUR_SUPABASE_URL'</code> and <code>'YOUR_SUPABASE_ANON_KEY'</code> with your actual Supabase credentials.</p>
+            <p class="mt-4 text-gray-400">You can find these in your Supabase project under Project Settings > API.</p>
         </div>
 
-        <!-- Vulnerability Selection View -->
-        <div id="vulnerability-view" class="hidden">
-             <h2 class="text-3xl text-center hacker-glow-text mb-8">Select Vulnerability Module</h2>
-            <div id="vulnerability-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Cards will be injected by JS -->
+        <!-- Login / Signup View -->
+        <div id="auth-view" class="hidden container-glow p-8 rounded-lg">
+            <h1 class="text-4xl font-bold text-glow mb-4 text-center">Phasenetwork Terminal</h1>
+            <p class="text-center text-gray-400 mb-8">Authentication Required<span class="blinking-cursor border-r-2 ml-1"></span></p>
+            
+            <div id="auth-forms-container">
+                <!-- Login Form -->
+                <form id="login-form" class="space-y-4">
+                    <h2 class="text-2xl text-glow">Login</h2>
+                    <input type="email" id="login-email" placeholder="email@domain.com" class="w-full p-3 rounded-md input-glow" required>
+                    <input type="password" id="login-password" placeholder="password" class="w-full p-3 rounded-md input-glow" required>
+                    <button type="submit" class="w-full p-3 rounded-md btn-glow font-bold">Access System</button>
+                    <p class="text-center text-gray-400">First time? <a href="#" id="show-signup" class="text-glow hover:underline">Create an account.</a></p>
+                </form>
+
+                <!-- Signup Form -->
+                <form id="signup-form" class="space-y-4 hidden">
+                    <h2 class="text-2xl text-glow">Create Account</h2>
+                    <input type="text" id="signup-username" placeholder="username" class="w-full p-3 rounded-md input-glow" required>
+                    <input type="email" id="signup-email" placeholder="email@domain.com" class="w-full p-3 rounded-md input-glow" required>
+                    <input type="password" id="signup-password" placeholder="password" class="w-full p-3 rounded-md input-glow" required>
+                    <button type="submit" class="w-full p-3 rounded-md btn-glow font-bold">Register Account</button>
+                    <p class="text-center text-gray-400">Already have an account? <a href="#" id="show-login" class="text-glow hover:underline">Login.</a></p>
+                </form>
+            </div>
+            <p id="auth-error" class="text-red-500 mt-4 text-center"></p>
+        </div>
+
+        <!-- Main App View (Quiz Selection, Leaderboard) -->
+        <div id="main-view" class="hidden">
+            <div class="flex justify-between items-center mb-6">
+                <h1 class="text-3xl font-bold text-glow">Welcome, <span id="username-display"></span></h1>
+                <button id="logout-btn" class="btn-glow px-4 py-2 rounded-md">Logout</button>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Quiz Selection -->
+                <div class="md:col-span-2 container-glow p-6 rounded-lg">
+                    <h2 class="text-2xl text-glow mb-4">Select a Vulnerability Module</h2>
+                    <div id="quiz-list" class="space-y-3">
+                        <!-- Quizzes will be populated here -->
+                    </div>
+                </div>
+
+                <!-- Leaderboard -->
+                <div class="md:col-span-1 container-glow p-6 rounded-lg">
+                    <h2 class="text-2xl text-glow mb-4">Live Leaderboard</h2>
+                    <ul id="leaderboard-list" class="space-y-2">
+                        <!-- Leaderboard will be populated here -->
+                    </ul>
+                </div>
             </div>
         </div>
 
         <!-- Quiz View -->
-        <div id="quiz-view" class="hidden">
-            <div class="hacker-card p-8 rounded-lg">
-                <div class="flex justify-between items-center mb-4">
-                    <h2 id="quiz-title" class="text-2xl hacker-glow-text-secondary"></h2>
-                    <p id="quiz-progress" class="text-lg font-mono"></p>
-                </div>
-                <div id="question-container" class="mb-6">
-                    <p id="question-text" class="text-xl mb-6 min-h-[6rem]"></p>
-                    <div id="options-container" class="space-y-3">
-                        <!-- Options will be injected by JS -->
-                    </div>
-                </div>
-                <p id="feedback-text" class="text-center h-6 mb-4 font-bold"></p>
-                <button id="next-question-btn" class="w-full p-2 hacker-btn rounded-md hidden">Next Question</button>
+        <div id="quiz-view" class="hidden container-glow p-8 rounded-lg">
+            <h2 id="quiz-title" class="text-3xl text-glow font-bold mb-6 text-center"></h2>
+            <div id="question-container">
+                <p id="question-text" class="text-xl mb-4"></p>
+                <div id="options-container" class="space-y-3"></div>
             </div>
-        </div>
-        
-        <!-- Results View -->
-        <div id="results-view" class="hidden">
-             <div class="hacker-card p-8 rounded-lg text-center">
-                 <h2 class="text-3xl hacker-glow-text mb-4">Assessment Complete</h2>
-                 <p class="text-xl mb-2">Vulnerability Module: <span id="results-quiz-name" class="font-bold text-cyan-400"></span></p>
-                 <p class="text-5xl font-bold my-8"><span id="results-score" class="hacker-glow-text"></span> / <span id="results-total"></span></p>
-                 <div class="flex justify-center space-x-4">
-                    <button id="post-score-btn" class="p-3 hacker-btn rounded-md">Post Score to Leaderboard</button>
-                    <button id="restart-quiz-btn" class="p-3 hacker-btn-secondary rounded-md">Retry Module</button>
-                 </div>
-             </div>
+            <div id="quiz-result" class="hidden text-center">
+                <h3 class="text-4xl font-bold text-glow mb-4">Quiz Complete!</h3>
+                <p class="text-2xl mb-6">Your score: <span id="final-score"></span></p>
+                <div class="flex gap-4 justify-center">
+                   <button id="post-score-btn" class="btn-glow px-6 py-3 rounded-md">Post to Leaderboard</button>
+                   <button id="back-to-main-btn" class="btn-glow px-6 py-3 rounded-md">Back to Main</button>
+                </div>
+            </div>
+            <p id="feedback" class="mt-4 text-center font-bold"></p>
         </div>
 
-        <!-- Leaderboard View -->
-        <div id="leaderboard-view" class="hidden">
-             <h2 class="text-3xl text-center hacker-glow-text mb-8">Global Leaderboard</h2>
-             <div class="hacker-card p-4 sm:p-8 rounded-lg">
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left">
-                        <thead class="border-b border-green-500/30">
-                            <tr>
-                                <th class="p-3 text-sm font-semibold tracking-wider text-green-400">RANK</th>
-                                <th class="p-3 text-sm font-semibold tracking-wider text-green-400">OPERATOR</th>
-                                <th class="p-3 text-sm font-semibold tracking-wider text-green-400">VULNERABILITY</th>
-                                <th class="p-3 text-sm font-semibold tracking-wider text-green-400">SCORE</th>
-                                <th class="p-3 text-sm font-semibold tracking-wider text-green-400">DATE</th>
-                            </tr>
-                        </thead>
-                        <tbody id="leaderboard-body">
-                           <!-- Scores will be injected here -->
-                        </tbody>
-                    </table>
-                </div>
-             </div>
-        </div>
     </div>
 
-    <!-- Firebase SDK -->
-    <script type="module">
-        // IMPORTANT: The Firebase JS SDK version has been updated to match your provided snippet.
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { 
-            getAuth, 
-            createUserWithEmailAndPassword, 
-            signInWithEmailAndPassword, 
-            onAuthStateChanged,
-            signOut,
-            updateProfile
-        } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-        import { 
-            getFirestore, 
-            collection, 
-            addDoc,
-            query,
-            orderBy,
-            onSnapshot,
-            limit
-        } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    <!-- Supabase SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        // --- Supabase Config (REPLACE with your actual credentials) ---
+        const supabaseUrl = 'https://pfmlwfogpkdidzbkdkjc.supabase.co'; // Found in Project Settings > API
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBmbWx3Zm9ncGtkaWR6Ymtka2pjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTgwNDQ1MjUsImV4cCI6MjA3MzYyMDUyNX0.FpmBlnf-jkD64MFNGBjZxrrdNTID2am0EL3HwcUmhjc'; // Found in Project Settings > API
 
-        // --- Firebase Config ---
-        // !!! SECURITY WARNING !!!
-        // The configuration below contains sensitive keys. You have shared this publicly.
-        // It is STRONGLY RECOMMENDED that you go to your Firebase project settings,
-        // REGENERATE the API key, and apply website restrictions to your new key.
-        // Replace this object with your NEW, SECURE configuration.
-        const firebaseConfig = {
-            apiKey: "AIzaSyBxG3nn81-8a5ppweIaCC1aOLu-lspyx5s",
-            authDomain: "quiz-59618.firebaseapp.com",
-            projectId: "quiz-59618",
-            storageBucket: "quiz-59618.appspot.com",
-            messagingSenderId: "444738676073",
-            appId: "1:444738676073:web:5b4d6667d59341c68749f8",
-            measurementId: "G-5BEMN0WVSH"
-        };
-
-        // --- App Initialization ---
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-
-        // --- UI Elements ---
-        const loadingSpinner = document.getElementById('loading-spinner');
-        const appHeader = document.getElementById('app-header');
-        const welcomeMessage = document.getElementById('welcome-message');
-        const views = {
-            auth: document.getElementById('auth-view'),
-            vulnerability: document.getElementById('vulnerability-view'),
-            quiz: document.getElementById('quiz-view'),
-            results: document.getElementById('results-view'),
-            leaderboard: document.getElementById('leaderboard-view'),
-        };
+        // --- DOM Elements ---
+        const configErrorView = document.getElementById('config-error-view');
+        const authView = document.getElementById('auth-view');
+        const mainView = document.getElementById('main-view');
+        const quizView = document.getElementById('quiz-view');
+        const loginForm = document.getElementById('login-form');
+        const signupForm = document.getElementById('signup-form');
+        const showSignup = document.getElementById('show-signup');
+        const showLogin = document.getElementById('show-login');
         const authError = document.getElementById('auth-error');
-
+        const usernameDisplay = document.getElementById('username-display');
+        const logoutBtn = document.getElementById('logout-btn');
+        const quizList = document.getElementById('quiz-list');
+        const leaderboardList = document.getElementById('leaderboard-list');
+        const quizTitle = document.getElementById('quiz-title');
+        const questionContainer = document.getElementById('question-container');
+        const questionText = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options-container');
+        const quizResult = document.getElementById('quiz-result');
+        const finalScore = document.getElementById('final-score');
+        const postScoreBtn = document.getElementById('post-score-btn');
+        const backToMainBtn = document.getElementById('back-to-main-btn');
+        const feedback = document.getElementById('feedback');
+        
         // --- App State ---
         let currentUser = null;
-        let currentQuizData = null;
+        let currentQuiz = null;
         let currentQuestionIndex = 0;
         let score = 0;
-        let leaderboardUnsubscribe = null;
 
-        // --- Quiz Data ---
-        const quizzes = {
-            "price-tampering": {
-                title: "Price Tampering",
-                questions: [
-                    { question: "What is the primary goal of a Price Tampering attack?", options: ["Steal user credentials", "Modify item prices for personal gain", "Crash the website", "Deface the homepage"], answer: "Modify item prices for personal gain" },
-                    { question: "Where is the most effective place to prevent price tampering?", options: ["Client-side JavaScript", "CSS styling", "Server-side validation", "HTML hidden fields"], answer: "Server-side validation" },
-                    { question: "Modifying a price in a hidden form field before submission is an example of...?", options: ["SQL Injection", "Cross-Site Scripting (XSS)", "Parameter Tampering", "Denial of Service (DoS)"], answer: "Parameter Tampering" },
-                    { question: "Why should a server never trust the final total price sent from a client's browser?", options: ["It might be inaccurate", "It can be easily manipulated", "It slows down the server", "It's a modern standard"], answer: "It can be easily manipulated" },
-                    { question: "Which tool is commonly used to intercept and modify HTTP requests for price tampering?", options: ["Photoshop", "Notepad", "Burp Suite", "A compiler"], answer: "Burp Suite" }
-                ]
-            },
-            "sql-injection": {
-                title: "SQL Injection",
-                questions: [
-                    { question: "What does SQL stand for?", options: ["Structured Query Language", "Strong Question Language", "Simple Query Logic", "System Query Language"], answer: "Structured Query Language" },
-                    { question: "What is the purpose of the SQL comment '--' in an attack?", options: ["To add helpful notes", "To crash the database", "To ignore the rest of the query", "To select all data"], answer: "To ignore the rest of the query" },
-                    { question: "Which technique is a primary defense against SQL Injection?", options: ["Using firewalls", "Encrypting the database", "Parameterized queries (prepared statements)", "Hiding the database server"], answer: "Parameterized queries (prepared statements)" },
-                    { question: "The statement '1'='1' is often used in SQLi attacks because it always evaluates to...?", options: ["FALSE", "NULL", "TRUE", "An error"], answer: "TRUE" },
-                    { question: "What type of SQL Injection uses database error messages to extract information?", options: ["In-band SQLi", "Blind SQLi", "Error-based SQLi", "Out-of-band SQLi"], answer: "Error-based SQLi" }
-                ]
-            },
-            "xss": {
-                title: "Cross-Site Scripting (XSS)",
-                questions: [
-                     { question: "What is the main goal of a Cross-Site Scripting (XSS) attack?", options: ["To inject malicious scripts into a trusted website", "To delete the website's database", "To overload the server", "To modify CSS styles"], answer: "To inject malicious scripts into a trusted website" },
-                    { question: "Which type of XSS is executed on the user's browser without the malicious script ever going to the server?", options: ["Stored XSS", "Reflected XSS", "DOM-based XSS", "Server-Side XSS"], answer: "DOM-based XSS" },
-                    { question: "What is a common way to prevent XSS vulnerabilities?", options: ["Validating user input for length", "Sanitizing and encoding user output", "Using complex passwords", "Blocking certain IP addresses"], answer: "Sanitizing and encoding user output" },
-                    { question: "Which HTML tag is commonly used to demonstrate a basic XSS vulnerability?", options: ["<div>", "<img>", "<p>", "<script>"], answer: "<script>" },
-                    { question: "In a 'Stored XSS' attack, where is the malicious script saved?", options: ["In the attacker's computer", "In the victim's browser cache", "In the website's database", "In a temporary file"], answer: "In the website's database" }
-                ]
-            }
-        };
+        // --- App Initialization Logic ---
+        // FIX: Check for placeholder credentials before initializing Supabase.
+        // This prevents the "Invalid supabaseUrl" error and guides the user.
+        if (supabaseUrl.includes('YOUR_SUPABASE_URL') || supabaseKey.includes('YOUR_SUPABASE_ANON_KEY')) {
+            configErrorView.classList.remove('hidden');
+        } else {
+            initializeApp();
+        }
 
-        // --- View Management ---
-        const showView = (viewId) => {
-            Object.values(views).forEach(view => view.classList.add('hidden'));
-            if(views[viewId]) {
-                views[viewId].classList.remove('hidden');
-            }
-        };
+        function initializeApp() {
+            const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
 
-        // --- Authentication Logic ---
-        onAuthStateChanged(auth, (user) => {
-            loadingSpinner.style.display = 'none';
-            if (user) {
-                currentUser = user;
-                welcomeMessage.textContent = `Welcome, ${user.displayName || user.email}`;
-                appHeader.classList.remove('hidden');
-                appHeader.classList.add('flex');
-                showView('vulnerability');
-            } else {
-                currentUser = null;
-                appHeader.classList.add('hidden');
-                appHeader.classList.remove('flex');
-                showView('auth');
-                if (leaderboardUnsubscribe) leaderboardUnsubscribe();
-            }
-        });
+            // --- Quiz Data ---
+            const quizzes = {
+                "price-tampering": {
+                    title: "Price Tampering",
+                    questions: [
+                        { question: "What is Price Tampering?", options: ["Changing item price in your favor", "A website pricing error", "Negotiating a price", "Stealing credit cards"], answer: 0 },
+                        { question: "Where does price tampering occur?", options: ["Client-side", "Server Database", "In-store systems", "Customer support call"], answer: 0 },
+                        { question: "How is price tampering best prevented?", options: ["Client-side encryption", "Server-side validation", "Hidden HTML fields", "JavaScript validation"], answer: 1 },
+                        { question: "Changing an item's value from $100 to $1 in dev tools is called:", options: ["XSS", "SQL Injection", "Client-Side Parameter Tampering", "DoS"], answer: 2 },
+                    ]
+                },
+                "sql-injection": {
+                    title: "SQL Injection",
+                    questions: [
+                        { question: "What does SQL Injection target?", options: ["Frontend JavaScript", "CSS Styles", "Backend Database", "User's browser"], answer: 2 },
+                        { question: "What is the purpose of ' or 1=1; --'?", options: ["To fix a bug", "To bypass login", "To delete a table", "To select a username"], answer: 1 },
+                        { question: "Which technique prevents SQLi?", options: ["Input validation", "Hiding database errors", "Parameterized queries", "Using firewalls"], answer: 2 },
+                    ]
+                },
+                "xss": {
+                    title: "Cross-Site Scripting (XSS)",
+                    questions: [
+                        { question: "What is the goal of a stored XSS attack?", options: ["Steal cookies", "Deface a website", "Inject a script for all users", "Crash the server"], answer: 2 },
+                        { question: "Which tag is commonly used for XSS?", options: ["<div>", "<img>", "<p>", "<script>"], answer: 3 },
+                        { question: "How to prevent XSS?", options: ["Encrypting cookies", "Output encoding", "Using HTTPS", "Blocking IP addresses"], answer: 1 },
+                    ]
+                }
+            };
 
-        document.getElementById('login-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const email = document.getElementById('login-email').value;
-            const password = document.getElementById('login-password').value;
-            authError.textContent = '';
-            try {
-                await signInWithEmailAndPassword(auth, email, password);
-            } catch (error) {
-                authError.textContent = error.message;
-            }
-        });
+            // --- Functions ---
 
-        document.getElementById('signup-form').addEventListener('submit', async (e) => {
-             e.preventDefault();
-            const email = document.getElementById('signup-email').value;
-            const password = document.getElementById('signup-password').value;
-            const username = document.getElementById('signup-username').value;
-            authError.textContent = '';
-             try {
-                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-                await updateProfile(userCredential.user, { displayName: username });
-                currentUser = auth.currentUser;
-                welcomeMessage.textContent = `Welcome, ${currentUser.displayName}`;
-                showView('vulnerability');
-            } catch (error) {
-                authError.textContent = error.message;
-            }
-        });
+            const showView = (viewId) => {
+                authView.classList.add('hidden');
+                mainView.classList.add('hidden');
+                quizView.classList.add('hidden');
+                configErrorView.classList.add('hidden');
+                document.getElementById(viewId).classList.remove('hidden');
+            };
 
-        document.getElementById('logout-btn').addEventListener('click', () => {
-            signOut(auth);
-        });
-        
-        document.getElementById('show-signup').addEventListener('click', (e) => {
-            e.preventDefault();
-            document.getElementById('signup-form-container').classList.toggle('hidden');
-        });
+            const displayAuthError = (message) => {
+                authError.textContent = message;
+            };
 
-        // --- Navigation ---
-        document.getElementById('leaderboard-nav-btn').addEventListener('click', () => {
-            loadLeaderboard();
-            showView('leaderboard');
-        });
-        document.getElementById('quizzes-nav-btn').addEventListener('click', () => {
-            if (leaderboardUnsubscribe) leaderboardUnsubscribe();
-            showView('vulnerability');
-        });
+            const fetchLeaderboard = async () => {
+                const { data, error } = await supabaseClient
+                    .from('leaderboard')
+                    .select('*')
+                    .order('score', { ascending: false })
+                    .limit(10);
+                
+                if (error) {
+                    console.error("Error fetching leaderboard:", error);
+                    return;
+                }
 
-        // --- Vulnerability Selection Logic ---
-        const vulnerabilityGrid = document.getElementById('vulnerability-grid');
-        Object.keys(quizzes).forEach(key => {
-            const quiz = quizzes[key];
-            const card = document.createElement('div');
-            card.className = 'hacker-card p-6 rounded-lg cursor-pointer';
-            card.innerHTML = `<h3 class="text-xl font-bold hacker-glow-text">${quiz.title}</h3><p class="text-sm text-gray-400 mt-2">${quiz.questions.length} questions</p>`;
-            card.addEventListener('click', () => startQuiz(key));
-            vulnerabilityGrid.appendChild(card);
-        });
+                leaderboardList.innerHTML = '';
+                data.forEach((entry, index) => {
+                    const li = document.createElement('li');
+                    li.className = 'flex justify-between items-center bg-gray-800/50 p-2 rounded';
+                    li.innerHTML = `
+                        <span>${index + 1}. ${entry.username}</span>
+                        <span class="font-bold text-glow">${entry.score}</span>
+                    `;
+                    leaderboardList.appendChild(li);
+                });
+            };
 
-        // --- Quiz Logic ---
-        const startQuiz = (quizId) => {
-            currentQuizData = quizzes[quizId];
-            currentQuestionIndex = 0;
-            score = 0;
-            document.getElementById('quiz-title').textContent = currentQuizData.title;
-            showQuestion();
-            showView('quiz');
-        };
+            const setupRealtimeLeaderboard = () => {
+                supabaseClient.channel('public:leaderboard')
+                    .on('postgres_changes', { event: '*', schema: 'public', table: 'leaderboard' }, payload => {
+                        fetchLeaderboard();
+                    })
+                    .subscribe();
+            };
 
-        const showQuestion = () => {
-            const question = currentQuizData.questions[currentQuestionIndex];
-            document.getElementById('question-text').textContent = question.question;
-            document.getElementById('quiz-progress').textContent = `${currentQuestionIndex + 1} / ${currentQuizData.questions.length}`;
+            const populateQuizzes = () => {
+                quizList.innerHTML = '';
+                for (const key in quizzes) {
+                    const quiz = quizzes[key];
+                    const button = document.createElement('button');
+                    button.className = 'w-full text-left p-3 rounded-md btn-glow';
+                    button.textContent = `> ${quiz.title}`;
+                    button.onclick = () => startQuiz(key);
+                    quizList.appendChild(button);
+                }
+            };
+
+            const startQuiz = (quizKey) => {
+                currentQuiz = quizzes[quizKey];
+                currentQuestionIndex = 0;
+                score = 0;
+                quizTitle.textContent = currentQuiz.title;
+                questionContainer.classList.remove('hidden');
+                quizResult.classList.add('hidden');
+                feedback.textContent = '';
+                postScoreBtn.disabled = false;
+                displayQuestion();
+                showView('quiz-view');
+            };
             
-            const optionsContainer = document.getElementById('options-container');
-            optionsContainer.innerHTML = '';
+            const displayQuestion = () => {
+                const question = currentQuiz.questions[currentQuestionIndex];
+                questionText.textContent = question.question;
+                optionsContainer.innerHTML = '';
+                question.options.forEach((option, index) => {
+                    const button = document.createElement('button');
+                    button.className = 'block w-full text-left p-3 rounded-md btn-glow';
+                    button.textContent = option;
+                    button.onclick = () => selectAnswer(index);
+                    optionsContainer.appendChild(button);
+                });
+            };
             
-            question.options.forEach(optionText => {
-                const button = document.createElement('button');
-                button.textContent = optionText;
-                button.className = 'w-full p-3 hacker-btn text-left rounded-md';
-                button.onclick = () => selectAnswer(button, optionText, question.answer);
-                optionsContainer.appendChild(button);
+            const selectAnswer = (selectedIndex) => {
+                const question = currentQuiz.questions[currentQuestionIndex];
+                if (selectedIndex === question.answer) {
+                    score++;
+                    feedback.textContent = "Correct!";
+                    feedback.className = "mt-4 text-center font-bold text-green-500";
+                } else {
+                    feedback.textContent = "Incorrect.";
+                    feedback.className = "mt-4 text-center font-bold text-red-500";
+                }
+                
+                currentQuestionIndex++;
+                setTimeout(() => {
+                    feedback.textContent = '';
+                    if (currentQuestionIndex < currentQuiz.questions.length) {
+                        displayQuestion();
+                    } else {
+                        showQuizResult();
+                    }
+                }, 1000);
+            };
+
+            const showQuizResult = () => {
+                questionContainer.classList.add('hidden');
+                quizResult.classList.remove('hidden');
+                finalScore.textContent = `${score} / ${currentQuiz.questions.length}`;
+            };
+
+            const postScore = async () => {
+                if (!currentUser) return;
+                postScoreBtn.disabled = true;
+
+                const { error } = await supabaseClient.from('leaderboard').insert([
+                    { 
+                        user_id: currentUser.id,
+                        username: currentUser.user_metadata.username, 
+                        score: score 
+                    }
+                ]);
+
+                if (error) {
+                    console.error("Error posting score:", error);
+                    alert("Error posting score.");
+                    postScoreBtn.disabled = false;
+                } else {
+                    alert("Score posted successfully!");
+                }
+            };
+
+            // --- Event Listeners ---
+
+            showSignup.addEventListener('click', (e) => {
+                e.preventDefault();
+                loginForm.classList.add('hidden');
+                signupForm.classList.remove('hidden');
+                displayAuthError('');
+            });
+            
+            showLogin.addEventListener('click', (e) => {
+                e.preventDefault();
+                signupForm.classList.add('hidden');
+                loginForm.classList.remove('hidden');
+                displayAuthError('');
             });
 
-            document.getElementById('feedback-text').textContent = '';
-            document.getElementById('next-question-btn').classList.add('hidden');
-        };
-        
-        const selectAnswer = (button, selectedOption, correctAnswer) => {
-            const optionsContainer = document.getElementById('options-container');
-            Array.from(optionsContainer.children).forEach(btn => {
-                btn.disabled = true;
-                if (btn.textContent === correctAnswer) {
-                     btn.className = 'w-full p-3 text-left rounded-md bg-green-500/30 border-green-500 text-white';
+            loginForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const email = document.getElementById('login-email').value;
+                const password = document.getElementById('login-password').value;
+                const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
+                if (error) displayAuthError(error.message);
+            });
+
+            signupForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const username = document.getElementById('signup-username').value;
+                const email = document.getElementById('signup-email').value;
+                const password = document.getElementById('signup-password').value;
+                const { error } = await supabaseClient.auth.signUp({
+                    email,
+                    password,
+                    options: {
+                        data: { username: username }
+                    }
+                });
+                if (error) displayAuthError(error.message);
+            });
+            
+            logoutBtn.addEventListener('click', async () => {
+                await supabaseClient.auth.signOut();
+            });
+
+            postScoreBtn.addEventListener('click', postScore);
+            backToMainBtn.addEventListener('click', () => showView('main-view'));
+
+            // --- Auth State Change Listener ---
+
+            supabaseClient.auth.onAuthStateChange((event, session) => {
+                if (session) {
+                    currentUser = session.user;
+                    usernameDisplay.textContent = currentUser.user_metadata.username;
+                    populateQuizzes();
+                    fetchLeaderboard();
+                    setupRealtimeLeaderboard();
+                    showView('main-view');
+                } else {
+                    currentUser = null;
+                    showView('auth-view');
                 }
             });
-
-            const feedback = document.getElementById('feedback-text');
-            if (selectedOption === correctAnswer) {
-                score++;
-                feedback.textContent = 'Correct!';
-                feedback.className = 'text-center h-6 mb-4 font-bold text-green-400';
-            } else {
-                button.className = 'w-full p-3 text-left rounded-md bg-red-500/30 border-red-500 text-white';
-                feedback.textContent = 'Incorrect!';
-                feedback.className = 'text-center h-6 mb-4 font-bold text-red-400';
-            }
-             document.getElementById('next-question-btn').classList.remove('hidden');
-        };
-
-        document.getElementById('next-question-btn').addEventListener('click', () => {
-            currentQuestionIndex++;
-            if (currentQuestionIndex < currentQuizData.questions.length) {
-                showQuestion();
-            } else {
-                showResults();
-            }
-        });
-        
-        // --- Results Logic ---
-        const showResults = () => {
-            document.getElementById('results-quiz-name').textContent = currentQuizData.title;
-            document.getElementById('results-score').textContent = score;
-            document.getElementById('results-total').textContent = currentQuizData.questions.length;
-            document.getElementById('post-score-btn').disabled = false;
-            document.getElementById('post-score-btn').textContent = "Post Score to Leaderboard";
-            showView('results');
-        };
-
-        document.getElementById('restart-quiz-btn').addEventListener('click', () => {
-            startQuiz(Object.keys(quizzes).find(key => quizzes[key].title === currentQuizData.title));
-        });
-
-        document.getElementById('post-score-btn').addEventListener('click', async () => {
-            if (!currentUser) return;
-            const postBtn = document.getElementById('post-score-btn');
-            postBtn.disabled = true;
-            postBtn.textContent = "Posting...";
-
-            try {
-                await addDoc(collection(db, "leaderboard"), {
-                    userId: currentUser.uid,
-                    userName: currentUser.displayName || 'Anonymous',
-                    vulnerability: currentQuizData.title,
-                    score: score,
-                    total: currentQuizData.questions.length,
-                    timestamp: new Date()
-                });
-                postBtn.textContent = "Posted!";
-                loadLeaderboard();
-                setTimeout(() => showView('leaderboard'), 1000);
-            } catch (error) {
-                console.error("Error posting score: ", error);
-                postBtn.textContent = "Error! Retry?";
-                postBtn.disabled = false;
-            }
-        });
-
-        // --- Leaderboard Logic ---
-        const loadLeaderboard = () => {
-            const leaderboardBody = document.getElementById('leaderboard-body');
-            const q = query(collection(db, "leaderboard"), orderBy("score", "desc"), orderBy("timestamp", "desc"), limit(25));
-            
-            leaderboardUnsubscribe = onSnapshot(q, (querySnapshot) => {
-                leaderboardBody.innerHTML = '';
-                let rank = 1;
-                querySnapshot.forEach((doc) => {
-                    const data = doc.data();
-                    const date = data.timestamp.toDate().toLocaleDateString();
-                    const row = `
-                        <tr class="border-b border-gray-500/20 hover:bg-green-500/10">
-                            <td class="p-3 font-bold text-lg">${rank++}</td>
-                            <td class="p-3">${data.userName}</td>
-                            <td class="p-3">${data.vulnerability}</td>
-                            <td class="p-3 font-mono text-cyan-400">${data.score} / ${data.total}</td>
-                            <td class="p-3 text-sm text-gray-400">${date}</td>
-                        </tr>
-                    `;
-                    leaderboardBody.innerHTML += row;
-                });
-            });
-        };
-
+        }
     </script>
-
 </body>
 </html>
 
